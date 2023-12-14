@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { ref, markRaw, toRefs } from 'vue'
 import { Sort } from '@element-plus/icons-vue'
 
 export default {

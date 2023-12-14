@@ -20,7 +20,7 @@ const app = {
 
             debuggerText: '',
             showDebugger: false,
-            historyRouters: {},
+            currentRoute: {},
         }
     },
     getters: {
@@ -32,10 +32,36 @@ const app = {
                 height: `calc(100% - ${state.mainGap[0] + state.mainGap[2]}px)`,
             }
         },
+        showFooterTools(state) {
+            const { meta } = state.currentRoute
+            const { navSearchMutualExclusion } = meta
+            let flag = navSearchMutualExclusion === false
+
+            if (navSearchMutualExclusion) {
+                flag = !state.searchFlag
+            }
+            return flag
+        },
+        popoverFilterConfig(state, getters, rootState) { // 高级筛选面板的选项配置
+            const { name } = state.currentRoute
+            return rootState[name] && rootState[name].filterConfig || {}
+        },
+        popoverSelectedFilter(state, getters, rootState) { // 选中的高级筛选集合
+            const { name } = state.currentRoute
+            return rootState[name] && rootState[name].selectedFilter || {}
+        },
+        innerPageFilterConfig(state, getters, rootState) { // 页脚筛选面板的选项配置
+            const { name } = state.currentRoute
+            return rootState[name] && rootState[name].innerPageFilterConfig || {}
+        },
+        innerPageSelectedFilter(state, getters, rootState) { // 选中的页脚筛选集合
+            const { name } = state.currentRoute
+            return rootState[name] && rootState[name].innerPageSelectedFilter || []
+        },
     },
     mutations: {
-        updateHistoryRouters(state, value) {
-            state.historyRouters[value] = 1
+        updateCurrentRoute(state, value) {
+            state.currentRoute = value
         },
         updateInputValue(state, value) {
             state.searchText = value
@@ -60,25 +86,23 @@ const app = {
         },
     },
     actions: {
-        searchHandle({ state, rootGetters, commit, dispatch }, route) {
+        searchHandle({ state, rootGetters, commit, dispatch }) {
+            const { name = '' } = state.currentRoute
             const searchRouteList = [homeRoute.name, movieRoute.name, summaryRoute.name]
 
-            if (!searchRouteList.includes(route.name)) return
+            if (!searchRouteList.includes(name)) return
 
             if (state.searchText === 'MOBBBB') {
                 commit('updateDebuggerShowStatus', true)
-            } else if (state.searchText.trim() === '' && !rootGetters[`${route.name}/hasSelectedFilter`]) {
+            } else if (state.searchText.trim() === '' && !rootGetters[`${name}/hasSelectedFilter`]) {
                 commit('updateSearchFlag', false)
             } else {
                 commit('updateSearchFlag', true)
-                dispatch(`${route.name}/filterDataByConfig`, {
-                    text: state.searchText,
-                    ...(route.meta || {}),
-                }, { root: true })
+                dispatch(`${name}/filterDataByConfig`, state.searchText, { root: true })
             }
         },
-        dispatchCommit({ commit }, { commitName, data = {} }) {
-            commit(commitName, data, { root: true })
+        dispatchCommit({ state, commit }, { commitName, data = {} }) {
+            commit(`${state.currentRoute.name}/${commitName}`, data, { root: true })
         },
         registerServiceWorker({ commit }) {
             window.addEventListener('load', function() {

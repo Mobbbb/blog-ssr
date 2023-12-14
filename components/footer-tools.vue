@@ -16,43 +16,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
 
 const store = useStore()
-const route = useRoute()
 
-const transRoute = computed(() => routeMap[route.name] || {})
-const routeName = computed(() => transRoute.value.name || '')
-
-const innerPageSelectedFilter = computed(() => {
-    if (!routeMap[route.name]) return []
-    if (store.state[routeMap[route.name].name]) {
-        return store.state[routeMap[route.name].name].innerPageSelectedFilter || []
-    }
-    return []
-})
+const innerPageFilterConfig = computed(() => store.getters['app/innerPageFilterConfig'])
+const innerPageSelectedFilter = computed(() => store.getters['app/innerPageSelectedFilter'])
 const searchFlag = computed(() => store.state.app.searchFlag)
-const innerPageFilterConfig = computed(() => {
-    if (!routeMap[route.name]) return []
-    return store.state[routeMap[route.name].name].innerPageFilterConfig
-})
 const selectedFilter = computed({
     get() {
         return innerPageSelectedFilter.value
     },
     set(value) {
-        setInnerPageSelectedFilter(value)
+        dispatchCommit({
+            commitName: 'setInnerPageSelectedFilter',
+            data: value,
+        })
         if (searchFlag.value) { // 处于搜索状态时，需要主动调用
-            searchHandle(transRoute.value)
+            searchHandle()
         }
     },
 })
 
-const searchHandle = (route) => store.dispatch('app/searchHandle', route)
-const setInnerPageSelectedFilter = (value) => store.commit(`${routeName.value}/setInnerPageSelectedFilter`, value)
-
+const dispatchCommit = (params) => store.dispatch('app/dispatchCommit', params)
+const searchHandle = () => store.dispatch('app/searchHandle')
 </script>
 
 <style scoped>

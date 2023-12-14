@@ -110,9 +110,15 @@ const home = {
         },
         updateYears(state, value) {
             state.selectedYears = value
-            localStorage.setItem('pick-years', value)
         },
         updateActiveMonth(state, value) {
+            state.activeMonth = value
+        },
+        updateAndSaveYears(state, value) {
+            state.selectedYears = value
+            localStorage.setItem('pick-years', value)
+        },
+        updateAndSaveActiveMonth(state, value) {
             state.activeMonth = value
             localStorage.setItem('pick-month', value)
         },
@@ -148,18 +154,21 @@ const home = {
         },
     },
     actions: {
+        initDefaultHomeHeader({ state, commit }) {
+            const maxYear = state.availableDate.years[state.availableDate.years.length - 1]
+            const monthArr = state.availableDate.yearMonths[maxYear] || []
+            const maxMonth = [...monthArr].sort(sortCallback())[0]
+            commit('updateYears', maxYear)
+            commit('updateActiveMonth', maxMonth)
+        },
         initHomeHeader({ state, commit }) {
             const localYears = localStorage.getItem('pick-years')
             const localMonth = localStorage.getItem('pick-month')
             if (!state.availableDate.months[`${localYears}-${localMonth}`]) {
-                const maxYear = state.availableDate.years[state.availableDate.years.length - 1]
-                const monthArr = state.availableDate.yearMonths[maxYear] || []
-                const maxMonth = [...monthArr].sort(sortCallback())[0]
-                commit('updateYears', maxYear)
-                commit('updateActiveMonth', maxMonth)
+                dispatch('initDefaultHomeHeader')
             } else {
-                commit('updateYears', localYears)
-                commit('updateActiveMonth', localMonth)
+                commit('updateAndSaveYears', localYears)
+                commit('updateAndSaveActiveMonth', localMonth)
             }
             commit('updateSelectedSortType', sortListConfig[0].value)
         },
@@ -171,8 +180,8 @@ const home = {
             if (initMonthIndex === null) return
 
             const { year, monthIndex } = calcNextDate(state.selectedYears, initMonthIndex, direction, state.availableDate)
-            commit('updateYears', year)
-            commit('updateActiveMonth', months[monthIndex].value)
+            commit('updateAndSaveYears', year)
+            commit('updateAndSaveActiveMonth', months[monthIndex].value)
         },
         async getAnimationHandle({ state, commit, dispatch }) { // 数据获取
             if (state.animationList.length) return
@@ -198,8 +207,9 @@ const home = {
          * @param {*} store 
          * @param {*} text 输入框内容
          */
-        filterDataByConfig({ state, getters, commit, dispatch }, { text, navSearchMutualExclusion = '' }) {
+        filterDataByConfig({ state, getters, commit, dispatch, rootState }, text) {
             let filterData = [], rawMaterial = []
+            const { navSearchMutualExclusion } = rootState.app.currentRoute.meta || {}
             if (navSearchMutualExclusion) {
                 rawMaterial = state.animationList
             } else {

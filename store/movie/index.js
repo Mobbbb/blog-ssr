@@ -116,7 +116,7 @@ const movie = {
          * @param {*} store 
          * @param {*} text 输入框内容
          */
-        filterDataByConfig({ state, getters, commit }, { text }) {
+        filterDataByConfig({ state, getters, commit }, text) {
             let filterData = []
 
             // 按输入框内容进行数据筛选

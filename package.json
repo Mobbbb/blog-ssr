@@ -17,7 +17,7 @@
     "pinia": "^2.0.14",
     "prismjs": "^1.25.0",
     "vue": "3.2.45",
-    "umob": "^0.2.4"
+    "umob": "^0.2.5"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.6",

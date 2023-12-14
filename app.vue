@@ -10,26 +10,17 @@
 </template>
 
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
 import { fetchScoreMap, fetchHomeListData } from '@/libs/api/home'
 import { fetchMovieListData } from '@/libs/api/movie'
 import { fetchSummaryListData } from '@/libs/api/summary'
 import '@/libs/extends'
 
 const store = useStore()
-const route = useRoute()
 
+const currentRoute = computed(() => store.state.app.currentRoute)
 const searchFlag = computed(() => store.state.app.searchFlag)
-const showFooterTools = computed(() => {
-	if (!routeMap[route.name]) return false
-
-	if (routeMap[route.name].meta.navSearchMutualExclusion) {
-		return !searchFlag.value
-	}
-	return routeMap[route.name].meta.navSearchMutualExclusion === false   
-})
+const showFooterTools = computed(() => store.getters['app/showFooterTools'])
 const mainWrapStyle = computed(() => store.getters['app/mainStyle'])
 const appMainStyle = computed(() => ({
 	paddingTop: `${store.state.app.navHeight}px`,
@@ -40,14 +31,15 @@ const appMainStyle = computed(() => ({
 const setAnimationData = (params) => store.dispatch('home/setAnimationData', params)
 const setMovieData = (params) => store.dispatch('movie/setMovieData', params)
 const setSummaryData = (params) => store.dispatch('summary/setSummaryData', params)
+const initDefaultHomeHeader = (params) => store.dispatch('home/initDefaultHomeHeader', params)
 
-const routeName = routeMap[route.name] || {}
-if (routeName.name === homeRoute.name) {
+if (currentRoute.value.name === homeRoute.name) {
 	const res = await Promise.all([fetchHomeListData(), fetchScoreMap()])
 	setAnimationData({ listData: res[0], scoreMap: res[1] })
-} else if (routeName.name === movieRoute.name) {
+	initDefaultHomeHeader()
+} else if (currentRoute.value.name === movieRoute.name) {
 	setMovieData(await fetchMovieListData())
-} else if (routeName.name === summaryRoute.name) {
+} else if (currentRoute.value.name === summaryRoute.name) {
 	setSummaryData(await fetchSummaryListData())
 }
 

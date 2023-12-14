@@ -1,5 +1,5 @@
 <template>
-    <div class="movie-detail">
+    <div class="movie-detail" v-loading="loading">
         <MediaDetail :params="movieInfo"></MediaDetail>
         <div class="detail-bottom-wrap">
             <h4 class="comment-label">剧集</h4>
@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang='ts'>
-import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fetchMovieItemByName } from '@/libs/api/movie.js'
@@ -25,11 +24,12 @@ const route = useRoute()
 
 useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${route.query.season || shortName}` })
 
-const historyRouters = computed(() => store.state.app.historyRouters)
 const movieInfo = ref({})
-
+const loading = ref(true)
 movieInfo.value = await fetchMovieItemByName(route.params.name)
 movieInfo.value.hoverShowLabel = movieInfo.value.label
+// todo
+loading.value = false
 
 const episodeClickHandle = () => {
     ElMessage({

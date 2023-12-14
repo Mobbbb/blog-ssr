@@ -6,14 +6,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
 	const updateActiveNavIndex = (path: string) => store.commit('app/updateActiveNavIndex', path)
 	const updateInputValue = (val: string) => store.commit('app/updateInputValue', val)
 	const updateSearchFlag = (flag: boolean) => store.commit('app/updateSearchFlag', flag)
-	const updateHistoryRouters = (val: string) => store.commit('app/updateHistoryRouters', val)
+	const updateCurrentRoute = (val: string) => store.commit('app/updateCurrentRoute', val)
 	
 	const { name: toName } = to
 	const { name: fromName } = from
 	if (typeof toName === 'string' && typeof fromName === 'string') {
 		const toItem = routeMap[toName] || {}
 		const fromItem = routeMap[fromName] || {}
-		updateHistoryRouters(toItem.name)
+		updateCurrentRoute(toItem)
 		
 		const { parent: toParentName } = toItem.meta || {}
 		const { parent: fromParentName } = fromItem.meta || {}

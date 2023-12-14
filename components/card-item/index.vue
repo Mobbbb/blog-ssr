@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { ref, defineAsyncComponent } from 'vue'
 import { genExtraChapterShowMode, imgConfig } from '@/libs/data-processing'
 import DescLabel from './desc-label.vue'
 import MoreLabel from './more-label.vue'

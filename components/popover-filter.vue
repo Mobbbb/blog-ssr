@@ -54,32 +54,14 @@
 <script setup lang='ts'>
 import { useStore } from 'vuex'
 import { RefreshLeft, Search } from '@element-plus/icons-vue'
-import { useRoute } from 'vue-router'
 
 const emit = defineEmits(['on-reset', 'on-search'])
 
 const store = useStore()
-const route = useRoute()
 
-const routeName = computed(() => {
-    const transRoute = routeMap[route.name] || {}
-    return transRoute.name || ''
-})
-
-const popoverFilterConfig = computed(() => {
-    if (!routeMap[route.name]) return {}
-    if (store.state[routeMap[route.name].name]) {
-        return store.state[routeMap[route.name].name].filterConfig || {}
-    }
-    return {}
-})
-const popoverSelectedFilter = computed(() => {
-    if (!routeMap[route.name]) return {}
-    if (store.state[routeMap[route.name].name]) {
-        return store.state[routeMap[route.name].name].selectedFilter || {}
-    }
-    return {} 
-})
+const popoverFilterConfig = computed(() => store.getters['app/popoverFilterConfig'])
+const popoverSelectedFilter = computed(() => store.getters['app/popoverSelectedFilter'])
+const dispatchCommit = (params) => store.dispatch('app/dispatchCommit', params)
 
 const rateScore = computed({
     get() {
@@ -87,7 +69,7 @@ const rateScore = computed({
     },
     set(value) {
         dispatchCommit({
-            commitName: `${routeName.value}/setSelectedRateScore`,
+            commitName: 'setSelectedRateScore',
             data: value,
         })
     },
@@ -98,7 +80,7 @@ const hideScore = computed({
     },
     set(value) {
         dispatchCommit({
-            commitName: `${routeName.value}/setSelectedHideScore`,
+            commitName: 'setSelectedHideScore',
             data: value,
         })
     },
@@ -109,14 +91,11 @@ const others = computed({
     },
     set(value) {
         dispatchCommit({
-            commitName: `${routeName.value}/setSelectedOthers`,
+            commitName: 'setSelectedOthers',
             data: value,
         })
     },
 })
-
-const dispatchCommit = (params) => store.dispatch('app/dispatchCommit', params)
-const setSelectedLabel = (name) => store.commit(`${routeName.value}/setSelectedLabel`, name)
 
 const clickResetBtn = () => {
     emit('on-reset')
@@ -125,7 +104,10 @@ const clickSearchBtn = () => {
     emit('on-search')
 }
 const clickLabel = (name) => {
-    setSelectedLabel(name)
+    dispatchCommit({
+        commitName: 'setSelectedLabel',
+        data: name,
+    })
 }
 </script>
 

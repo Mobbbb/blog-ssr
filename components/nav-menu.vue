@@ -80,18 +80,7 @@ export default {
             },
         },
         popOverDisabled() {
-            if (!routeMap[this.$route.name]) return true
-            if (this.$store.state[routeMap[this.$route.name].name]) {
-                const popoverFilterConfig = this.$store.state[routeMap[this.$route.name].name].filterConfig || {}
-                return !Object.keys(popoverFilterConfig).length
-            }
-            return true
-        },
-        transRoute() {
-            return  routeMap[this.$route.name] || {}
-        },
-        routeName() {
-            return this.transRoute.name || ''
+            return !Object.keys(this.popoverFilterConfig).length
         },
     },
     mounted() {
@@ -106,7 +95,7 @@ export default {
             'dispatchCommit',
         ]),
         onEnter() {
-            this.searchHandle(this.transRoute)
+            this.searchHandle()
             this.showFilterContent = false
             setTimeout(() => {
                 this.inputEl.blur()
@@ -114,7 +103,7 @@ export default {
         },
         clickResetBtn() {
             this.updateInputValue('')
-            this.dispatchCommit({ commitName: `${this.routeName}/resetSelectedFilter` })
+            this.dispatchCommit({ commitName: 'resetSelectedFilter' })
             this.onEnter()
         },
         clickSearchBtn() {

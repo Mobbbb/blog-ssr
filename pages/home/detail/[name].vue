@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang='ts'>
-import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fetchHomeItemByName } from '@/libs/api/home.js'
@@ -53,7 +52,6 @@ const episodeWidth = ref(88)
 const episodeWrap = ref(null)
 
 const animationList = computed(() => store.state.home.animationList)
-const historyRouters = computed(() => store.state.app.historyRouters)
 
 const mediaInfo = ref({})
 

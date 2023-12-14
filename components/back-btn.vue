@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { ArrowLeft } from '@element-plus/icons-vue'
 
 export default {
@@ -13,11 +14,17 @@ export default {
     components: {
         ArrowLeft,
     },
+    computed: {
+        ...mapState('app', [
+            'currentRoute',
+        ]),
+    },
     methods: {
         backHandle() {
-            if (routeMap[this.$route.name] && routeMap[this.$route.name].meta.parent) {
+            const { meta = {} } = this.currentRoute
+            if (meta.parent) {
                 this.$router.push({
-                    name: routeMap[this.$route.name].meta.parent,
+                    name: meta.parent,
                 })
             } else {
                 history.back()

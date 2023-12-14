@@ -1,6 +1,8 @@
 <template>
     <div class="movie-wrap mobile-wrap" v-infinite-scroll="loadMovieList" ref="movieWrap"
-            :infinite-scroll-immediate="false" :infinite-scroll-disabled="isLoadAll">
+            :infinite-scroll-immediate="false"
+            :infinite-scroll-disabled="isLoadAll"
+            :infinite-scroll-distance="5">
         <MovieHeader @sort-change="sortChange"></MovieHeader>
         <div class="movie-content" v-loading="isLoading">
             <template v-if="formatMovieListByPage.length">
@@ -25,9 +27,6 @@ export default {
     name: 'movie',
     data() {
         return {
-            // Cannot destructure property 'containerEl' of 'el[SCOPE]' as it is undefined.
-            // https://juejin.cn/post/7095925947412512804
-            // isMounted: false,
             currentPage: 1,
             pageSize: 9,
             movieWrapHeight: 0,
@@ -52,7 +51,6 @@ export default {
         },
     },
     async mounted() {
-        // this.isMounted = true
         await this.getMovieListHandle()
         this.$nextTick(() => {
             this.movieWrapHeight = this.$refs.movieWrap.clientHeight

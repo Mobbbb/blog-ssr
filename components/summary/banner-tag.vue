@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'summary-banner-tag',
     props: ['params'],
@@ -22,11 +24,17 @@ export default {
             return this.params.channel === 0 ? '原创' : '转载'
         },
     },
+    computed: {
+        ...mapState('app', [
+            'currentRoute',
+        ]),
+    },
     methods: {
         backAction() {
-            if (routeMap[this.$route.name].meta.parent) {
+            const { meta = {} } = this.currentRoute
+            if (meta.parent) {
                 this.$router.push({
-                    name: routeMap[this.$route.name].meta.parent,
+                    name: meta.parent,
                 })
             } else {
                 history.back()

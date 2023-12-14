@@ -66,8 +66,9 @@ const summary = {
          * @param {*} store 
          * @param {*} text 输入框内容
          */
-        filterDataByConfig({ state, getters, commit }, { text, navSearchMutualExclusion = '' }) {
+        filterDataByConfig({ state, getters, commit, rootState }, text) {
             let filterData = [], rawMaterial = []
+            const { navSearchMutualExclusion } = rootState.app.currentRoute.meta || {}
             if (navSearchMutualExclusion) {
                 rawMaterial = state.articleList
             } else {

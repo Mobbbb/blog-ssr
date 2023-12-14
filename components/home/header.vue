@@ -47,7 +47,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { DArrowLeft, DArrowRight } from '@element-plus/icons-vue'
-import { markRaw } from 'vue'
 import { sortCallback } from 'umob'
 
 export default {
@@ -77,7 +76,7 @@ export default {
                 return this.$store.state.home.selectedYears
             },
             set(value) {
-                this.updateYears(value)
+                this.updateAndSaveYears(value)
             },
         },
         disabledDate() {
@@ -125,8 +124,8 @@ export default {
     },
     methods: {
         ...mapMutations('home', [
-            'updateActiveMonth',
-            'updateYears',
+            'updateAndSaveActiveMonth',
+            'updateAndSaveYears',
             'updateSelectedSortType',
         ]),
         ...mapActions('home', [ 
@@ -138,13 +137,13 @@ export default {
         },
         selectedMonth(value) {
             if (this.availableDate.months[`${this.selectedYears}-${value}`]) {
-                this.updateActiveMonth(value)
+                this.updateAndSaveActiveMonth(value)
             }
         },
         changeYears() {
             if (!this.availableDate.months[`${this.selectedYears}-${this.activeMonth}`]) {
                 const monthArr = this.availableDate.yearMonths[this.selectedYears] || []
-                this.updateActiveMonth([...monthArr].sort(sortCallback({ type: 'asc' }))[0])
+                this.updateAndSaveActiveMonth([...monthArr].sort(sortCallback({ type: 'asc' }))[0])
             }
         },
     },
