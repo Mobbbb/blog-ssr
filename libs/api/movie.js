@@ -13,11 +13,14 @@ export const axiosFetchMovieListData = () => {
 }
 
 export const fetchMovieItemByName = async (name) => {
-    const response = await useFetch('/api/blog/movie/getMovieByName', {
+    const { data: response, pending } = await useLazyFetch('/api/blog/movie/getMovieByName', {
         query: {
             name,
         },
         method: 'get',
     })
-    return response.data.value.data || {}
+    return {
+        response,
+        pending,
+    }
 }

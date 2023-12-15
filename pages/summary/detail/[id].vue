@@ -1,5 +1,5 @@
 <template>
-    <div class="summary-detail-wrap mobile-wrap">
+    <div class="summary-detail-wrap mobile-wrap" v-loading="pending">
         <div class="detail-title">{{detailData.title}}</div>
         <SummaryBannerTag :params="detailData"></SummaryBannerTag>
         <SummaryContent :params="formatData"></SummaryContent>
@@ -40,7 +40,8 @@ const formatData = computed(() => {
     return formatDataList
 })
 
-detailData.value = await fetchSummaryItemById(route.params.id)
+const { response, pending } = await fetchSummaryItemById(route.params.id)
+useLazyFetchHandle(response, detailData)
 
 useHead({ titleTemplate: (productCategory) => `${detailData.value.title} - ${route.query.season || shortName}` })
 

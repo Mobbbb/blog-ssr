@@ -2,13 +2,17 @@
     <div class="video-page">
         <div class="video-top-wrap">
             <div class="blurbg-wrap"><div class="blurbg-image" :style="style"></div></div>
-            <div class="video-title">{{titleText}}</div>
+            <div class="video-title">第{{route.params.num}}话 {{route.params.name + ' ' +  route.query.season}}</div>
             <div class="video-wrap" @mouseover="hoverVideo = true" @mouseleave="hoverVideo = false">
                 <video class="video-player"
                     ref="videoPlayer"
                     preload="metadata"
                     :src="source[playSourceIndex]"
-                    @click="clickPlay(!playStatus)">
+                    @click="clickPlay(!playStatus)"
+                    @error="videoError"
+                    @loadeddata="videoLoadeddata"
+                    @progress="videoProgress"
+                    @canplay="videoCanplay">
                 </video>
                 <Transition name="fade">
                     <div class="player-tools-wrap" v-if="!playStatus || hoverVideo">
@@ -93,190 +97,202 @@
     </div>
 </template>
 
-<script>
+<script setup lang='ts'>
+import { useRoute } from 'vue-router'
 import { transTime } from '@/libs/utils'
 import { axiosFetchHomeItemByName } from '@/libs/api/home.js'
 
-export default {
-    name: 'video-play',
-    data() {
-        return {
-            mediaInfo: {},
-            hoverVoice: false,
-            hoverVideo: false,
-            hoverPlayBar: false,
-            playStatus: 0,
-            duration: '00:00',
-            currentTime: '00:00',
-            playBarTextTime: '00:00',
-            timeInterval: null,
-            voiceTimeout: null,
-            voiceOffset: 0,
-            latestVoiceOffset: 0,
-            latestPlayedPercent: 0,
-            loadedPercent: 0,
-            playedPercent: 0,
-            playBarTextOffset: 0,
-            startY: null,
-            playBarStartX: null,
-            videoPlayer: null,
-            changeVoiceLock: false,
-            dragPlayBarStatus: false,
-            playBtnDisAbleStatus: true,
-            playBarWidth: 1,
-            playSourceIndex: 0,
-        }
-    },
-    computed: {
-        endProgress() {
-            let { endProgress = '', episodes = '' } = this.mediaInfo
-            endProgress = parseInt(episodes) || parseInt(endProgress) || 0
-            return endProgress
-        },
-        source() {
-            const index = this.$route.params.num
-            const source = this.mediaInfo.source || {}
-            return source[index] || []
-        },
-        style() {
-            return this.mediaInfo.cover ? { backgroundImage: `url(${this.mediaInfo.cover})` } : {}
-        },
-        titleText() {
-            return `第${this.$route.params.num}话 ${this.$route.params.name} ${this.$route.query.season}`
-        },
-    },
-    async mounted() {
-        await this.getDetailData()
+const route = useRoute()
 
-        this.playBarWidth = this.$refs.playerBarWrap.clientWidth
-        this.videoPlayer = this.$refs.videoPlayer
-        this.videoPlayer.addEventListener('loadeddata', () => {
-            let minutes = parseInt(this.videoPlayer.duration / 60)
-            minutes = minutes < 10 ? `0${minutes}` : minutes
-            let secons = parseInt(this.videoPlayer.duration % 60)
-            secons = secons < 10 ? `0${secons}` : secons
-            this.duration = `${minutes}:${secons}`
-        })
-        this.videoPlayer.addEventListener('progress', () => {
-            if (this.videoPlayer.buffered.length) {
-                this.loadedPercent = this.videoPlayer.buffered.end(0) / this.videoPlayer.duration * 100
-            }
-        })
-        this.videoPlayer.addEventListener('canplay', () => {
-            if (this.videoPlayer.readyState >= 2) {
-                this.playBtnDisAbleStatus = false
-            }
-        })
-    },
-    methods: {
-        async getDetailData() {
-            const res = await axiosFetchHomeItemByName({
-                name: this.$route.params.name,
-                season: this.$route.query.season,
-            })
-            this.mediaInfo = res.data.data || {}
-        },
-        hoverVoiceHandle() {
-            clearTimeout(this.voiceTimeout)
-            this.hoverVoice = true
-        },
-        leaveVoiceHandle() {
-            if (!this.changeVoiceLock) {
-                this.voiceTimeout = setTimeout(() => {
-                    this.hoverVoice = false
-                }, 500)
-            }
-        },
-        clickPlay(status) {
-            if (this.playBtnDisAbleStatus) return
-            this.playStatus = status
-            if (status) {
-                this.videoPlayer.play()
-                this.timeInterval = setInterval(this.getCurrentVideoTime, 500)
-            } else {
-                this.videoPlayer.pause()
-                clearInterval(this.timeInterval)
-            }
-        },
-        getCurrentVideoTime() {
-            this.currentTime = transTime(this.videoPlayer.currentTime)
-            this.playedPercent = this.videoPlayer.currentTime / this.videoPlayer.duration * 100
-        },
-        playBarMouseover(e) {
-            this.hoverPlayBar = true
-            this.playBarTextOffset = e.offsetX
-            this.playBarTextTime = transTime(e.offsetX / this.playBarWidth * this.videoPlayer.duration)
-            if (this.$refs.playerBarWrap) {
-                this.$refs.playerBarWrap.addEventListener('mousemove', this. playBarTextMousemove)
-            }
-        },
-        playBarTextMousemove(e) {
-            this.playBarTextOffset = e.offsetX
-            this.playBarTextTime = transTime(e.offsetX / this.playBarWidth * this.videoPlayer.duration)
-        },
-        playBarMouseleave(e) {
-            this.hoverPlayBar = false
-            if (this.$refs.playerBarWrap) {
-                this.$refs.playerBarWrap.removeEventListener('mousemove', this.playBarTextMousemove)
-            }
-        },
-        playBarMousedown(e){
-            this.playBarStartX = e.clientX
-            this.playedPercent = e.offsetX / this.playBarWidth * 100
-            this.latestPlayedPercent = this.playedPercent
-            document.addEventListener('mousemove', this. playBarMousemove)
-            document.addEventListener('mouseup', this. playBarMouseup)
-        },
-        playBarMousemove(e){
-            this.playedPercent = (e.clientX - this.playBarStartX) / this.playBarWidth * 100 + this.latestPlayedPercent
-            if (this.playedPercent > 100) this.playedPercent = 100
-            if (this.playedPercent < 0) this.playedPercent = 0
-        },
-        playBarMouseup(e) {
-            this.videoPlayer.currentTime = this.videoPlayer.duration * this.playedPercent / 100
-            this.currentTime = transTime(this.videoPlayer.currentTime)
-            document.removeEventListener('mousemove', this.playBarMousemove)
-            document.removeEventListener('mouseup', this.playBarMouseup)
-        },
-        clickVolume() {
-            if (this.voiceOffset === 48) {
-                this.voiceOffset = 0
-            } else {
-                this.voiceOffset = 48
-            }
-            this.videoPlayer.volume = this.voiceOffset / 48
-        },
-        voiceBarMousedown(e) {
-            this.startY = e.clientY
-            this.latestVoiceOffset = this.voiceOffset
-            document.addEventListener('mousemove', this.mousemove)
-            document.addEventListener('mouseup', this.mouseup)
-            this.changeVoiceLock = true
-        },
-        mousemove(e) {
-            this.voiceOffset = this.latestVoiceOffset + e.clientY - this.startY
-            if (this.voiceOffset > 48) this.voiceOffset = 48
-            if (this.voiceOffset < 0) this.voiceOffset = 0
-            this.videoPlayer.volume = this.voiceOffset / 48
-        },
-        mouseup(e) {
-            document.removeEventListener('mousemove', this.mousemove)
-            document.removeEventListener('mouseup', this.mouseup)
-            this.changeVoiceLock = false
-            if (e.target !== this.$refs.volumeBox && e.target !== this.$refs.thumbDot && e.target !== this.$refs.voiceNum) {
-                this.hoverVoice = false
-            }
-        },
-        fullScreenHandle() {
-            if (this.videoPlayer.requestFullScreen) {
-                this.videoPlayer.requestFullScreen()
-            } else if (this.videoPlayer.mozRequestFullScreen) {
-                this.videoPlayer.mozRequestFullScreen()
-            } else if (this.videoPlayer.webkitRequestFullScreen) {
-                this.videoPlayer.webkitRequestFullScreen()
-            }
-        },
-    },
+useHead({
+    titleTemplate: (productCategory) => {
+        return `${route.params.name} ${route.query.season} 第${route.params.num}话 - ${shortName}`
+    }
+})
+
+const hoverVoice = ref(false)
+const hoverVideo = ref(false)
+const hoverPlayBar = ref(false)
+const playStatus = ref(0)
+const duration = ref('00:00')
+const currentTime = ref('00:00')
+const playBarTextTime = ref('00:00')
+const timeInterval = ref(null)
+const voiceTimeout = ref(null)
+const voiceOffset = ref(0)
+const latestVoiceOffset = ref(0)
+const latestPlayedPercent = ref(0)
+const loadedPercent = ref(0)
+const playedPercent = ref(0)
+const playBarTextOffset = ref(0)
+const startY = ref(null)
+const playBarStartX = ref(null)
+const videoPlayer = ref(null)
+const playerBarWrap = ref(null)
+const changeVoiceLock = ref(false)
+const dragPlayBarStatus = ref(false)
+const playBtnDisAbleStatus = ref(true)
+const playBarWidth = ref(1)
+const playSourceIndex = ref(0)
+const volumeBox = ref(null)
+const thumbDot = ref(null)
+const voiceNum = ref(null)
+const mediaInfo = ref({})
+
+const endProgress = computed(() => {
+    let { endProgress = '', episodes = '' } = mediaInfo.value
+    endProgress = parseInt(episodes) || parseInt(endProgress) || 0
+    return endProgress
+})
+
+const source = computed(() => {
+    const index = route.params.num
+    const source = mediaInfo.value.source || {}
+    return source[index] || []
+})
+
+const style = computed(() => {
+    if (mediaInfo.value.cover) {
+        return {
+            backgroundImage: `url(${mediaInfo.value.cover})`
+        }
+    }
+    return {}
+})
+
+onMounted(async () => {
+    playBarWidth.value = playerBarWrap.value.clientWidth
+    let res = await axiosFetchHomeItemByName({
+        name: route.params.name,
+        season: route.query.season,
+    })
+    mediaInfo.value = res.data.data
+})
+
+const videoError = (e) => {
+    ElMessage({
+        message: '视频已失效！',
+        type: 'error',
+        offset: 150,
+    })
+}
+const videoLoadeddata = () => {
+    let minutes = parseInt(videoPlayer.value.duration / 60)
+    minutes = minutes < 10 ? `0${minutes}` : minutes
+    let secons = parseInt(videoPlayer.value.duration % 60)
+    secons = secons < 10 ? `0${secons}` : secons
+    duration.value = `${minutes}:${secons}`
+}
+const videoProgress = () => {
+    if (videoPlayer.value.buffered.length) {
+        loadedPercent.value = videoPlayer.value.buffered.end(0) / videoPlayer.value.duration * 100
+    }
+}
+const videoCanplay = () => {
+    if (videoPlayer.value.readyState >= 2) {
+        playBtnDisAbleStatus.value = false
+    }
+}
+
+const hoverVoiceHandle = () => {
+    clearTimeout(voiceTimeout.value)
+    hoverVoice.value = true
+}
+const leaveVoiceHandle = () => {
+    if (!changeVoiceLock.value) {
+        voiceTimeout.value = setTimeout(() => {
+            hoverVoice.value = false
+        }, 500)
+    }
+}
+const clickPlay = (status) => {
+    if (playBtnDisAbleStatus.value) return
+    playStatus.value = status
+    if (status) {
+        videoPlayer.value.play()
+        timeInterval.value = setInterval(getCurrentVideoTime.value, 500)
+    } else {
+        videoPlayer.value.pause()
+        clearInterval(timeInterval.value)
+    }
+}
+const getCurrentVideoTime = () => {
+    currentTime.value = transTime(videoPlayer.value.currentTime)
+    playedPercent.value = videoPlayer.value.currentTime / videoPlayer.value.duration * 100
+}
+const playBarMouseover = (e) => {
+    hoverPlayBar.value = true
+    playBarTextOffset.value = e.offsetX
+    playBarTextTime.value = transTime(e.offsetX / playBarWidth.value * videoPlayer.value.duration)
+    if (playerBarWrap.value) {
+        playerBarWrap.value.addEventListener('mousemove', playBarTextMousemove)
+    }
+}
+const playBarTextMousemove = (e) => {
+    playBarTextOffset.value = e.offsetX
+    playBarTextTime.value = transTime(e.offsetX / playBarWidth.value * videoPlayer.value.duration)
+}
+const playBarMouseleave = (e) => {
+    hoverPlayBar.value = false
+    if (playerBarWrap.value) {
+        playerBarWrap.value.removeEventListener('mousemove', playBarTextMousemove)
+    }
+}
+const playBarMousedown = (e) => {
+    playBarStartX.value = e.clientX
+    playedPercent.value = e.offsetX / playBarWidth.value * 100
+    latestPlayedPercent.value = playedPercent.value
+    document.addEventListener('mousemove', playBarMousemove)
+    document.addEventListener('mouseup', playBarMouseup)
+}
+const playBarMousemove = (e) => {
+    playedPercent.value = (e.clientX - playBarStartX.value) / playBarWidth.value * 100 + latestPlayedPercent.value
+    if (playedPercent.value > 100) playedPercent.value = 100
+    if (playedPercent.value < 0) playedPercent.value = 0
+}
+const playBarMouseup = (e) => {
+    videoPlayer.value.currentTime = videoPlayer.value.duration * playedPercent.value / 100
+    currentTime.value = transTime(videoPlayer.value.currentTime)
+    document.removeEventListener('mousemove', playBarMousemove)
+    document.removeEventListener('mouseup', playBarMouseup)
+}
+const clickVolume = (e) => {
+    if (voiceOffset.value === 48) {
+        voiceOffset.value = 0
+    } else {
+        voiceOffset.value = 48
+    }
+    videoPlayer.value.volume = voiceOffset.value / 48
+}
+const voiceBarMousedown = (e) => {
+    startY.value = e.clientY
+    latestVoiceOffset.value = voiceOffset.value
+    document.addEventListener('mousemove', mousemove)
+    document.addEventListener('mouseup', mouseup)
+    changeVoiceLock.value = true
+}
+const mousemove = (e) => {
+    voiceOffset.value = latestVoiceOffset.value + e.clientY - startY.value
+    if (voiceOffset.value > 48) voiceOffset.value = 48
+    if (voiceOffset.value < 0) voiceOffset.value = 0
+    videoPlayer.value.volume = voiceOffset.value / 48
+}
+const mouseup = (e) => {
+    document.removeEventListener('mousemove', mousemove)
+    document.removeEventListener('mouseup', mouseup)
+    changeVoiceLock.value = false
+    if (e.target !== volumeBox.value && e.target !== thumbDot.value && e.target !== voiceNum.value) {
+        hoverVoice.value = false
+    }
+}
+const fullScreenHandle = (e) => {
+    if (videoPlayer.value.requestFullScreen) {
+        videoPlayer.value.requestFullScreen()
+    } else if (videoPlayer.value.mozRequestFullScreen) {
+        videoPlayer.value.mozRequestFullScreen()
+    } else if (videoPlayer.value.webkitRequestFullScreen) {
+        videoPlayer.value.webkitRequestFullScreen()
+    }
 }
 </script>
 

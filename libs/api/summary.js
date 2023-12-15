@@ -13,12 +13,14 @@ export const axiosFetchSummaryListData = () => {
 }
 
 export const fetchSummaryItemById = async (id) => {
-    const response = await useFetch('/api/blog/summary/getSummaryById', {
+    const { data: response, pending } = await useLazyFetch('/api/blog/summary/getSummaryById', {
         query: {
             id,
         },
         method: 'get',
     })
-    const res = response.data.value.data || {}
-    return res
+    return {
+        response,
+        pending,
+    }
 }

@@ -33,7 +33,7 @@ const app = {
             }
         },
         showFooterTools(state) {
-            const { meta } = state.currentRoute
+            const { meta = {} } = state.currentRoute
             const { navSearchMutualExclusion } = meta
             let flag = navSearchMutualExclusion === false
 

@@ -94,3 +94,27 @@ _routeMap_.index = homeRoute
 export const routeMap = _routeMap_
 
 export default routeConfig
+
+export const useLazyFetchHandle = (response: any, mediaInfo: any, type: string) => {
+    if (response.value) {
+        // 服务端渲染的数据处理
+        mediaInfo.value = response.value.data
+        if (mediaInfo.value.label) {
+            mediaInfo.value.hoverShowLabel = mediaInfo.value.label
+        }
+        if (!mediaInfo.value.type && type) {
+            mediaInfo.value.type = type
+        }
+    }
+    
+    watch(response, (newRes) => {
+        // 监听路由跳转请求的数据处理
+        mediaInfo.value = newRes.data
+        if (mediaInfo.value.label) {
+            mediaInfo.value.hoverShowLabel = mediaInfo.value.label
+        }
+        if (!mediaInfo.value.type && type) {
+            mediaInfo.value.type = type
+        }
+    })
+}
