@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from '@/utils/api.request'
 
 export const fetchHomeListData = async () => {
     const response = await useFetch('/resource/home-assets/home-data.json')

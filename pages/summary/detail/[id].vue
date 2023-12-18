@@ -10,8 +10,7 @@
 import Prism from 'prismjs'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { formatSummaryContent } from '@/libs/data-processing'
-import { fetchSummaryItemById } from '@/libs/api/summary.js'
+import { fetchSummaryItemById } from '@/utils/api/summary.js'
 
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()

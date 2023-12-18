@@ -18,7 +18,6 @@
 
 <script setup lang='ts'>
 import { useStore } from 'vuex'
-import { filterDataByOthersCheck } from '@/libs/data-processing'
 
 const store = useStore()
 

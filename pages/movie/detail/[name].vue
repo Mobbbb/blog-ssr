@@ -17,7 +17,7 @@
 <script setup lang='ts'>
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchMovieItemByName } from '@/libs/api/movie.js'
+import { fetchMovieItemByName } from '@/utils/api/movie.js'
 
 const store = useStore()
 const route = useRoute()

@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from '@/utils/api.request'
 
 export const fetchMovieListData = async () => {
     const response = await useFetch('/resource/movie-assets/movie-data.json')

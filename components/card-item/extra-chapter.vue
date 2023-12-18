@@ -24,7 +24,6 @@
 
 <script>
 import { gsap } from 'gsap'
-import { imgConfig } from '@/libs/data-processing'
 
 const transMode = {
     left: 'right',

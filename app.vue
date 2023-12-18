@@ -11,10 +11,10 @@
 
 <script setup lang='ts'>
 import { useStore } from 'vuex'
-import { fetchScoreMap, fetchHomeListData } from '@/libs/api/home'
-import { fetchMovieListData } from '@/libs/api/movie'
-import { fetchSummaryListData } from '@/libs/api/summary'
-import '@/libs/extends'
+import { fetchScoreMap, fetchHomeListData } from '@/utils/api/home'
+import { fetchMovieListData } from '@/utils/api/movie'
+import { fetchSummaryListData } from '@/utils/api/summary'
+import '@/utils/extends'
 
 const store = useStore()
 
@@ -43,7 +43,7 @@ if (currentRoute.value.name === homeRoute.name) {
 	setSummaryData(await fetchSummaryListData())
 }
 
-onMounted(() => import('@/libs/weixinJSBridge'))
+onMounted(() => import('@/utils/weixinJSBridge'))
 </script>
 
 <style scoped>

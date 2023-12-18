@@ -1,12 +1,4 @@
-import { 
-    filterDataByRateScore, 
-    filterDataByText,
-    initMovieListData,
-    filterDataByLabel,
-    sortDataByDateHandle,
-    sortDataByScoreHandle,
- } from '@/libs/data-processing'
-import { axiosFetchMovieListData } from '@/libs/api/movie.js'
+import { axiosFetchMovieListData } from '@/utils/api/movie.js'
 import { deepClone } from 'umob'
 
 const initSelectedFilter = {

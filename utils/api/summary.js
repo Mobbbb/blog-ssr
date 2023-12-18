@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from '@/utils/api.request'
 
 export const fetchSummaryListData = async () => {
     const response = await useFetch('/resource/summary-assets/summary-assets.json')

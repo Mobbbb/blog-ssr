@@ -84,8 +84,6 @@
 </template>
 
 <script>
-import { sequelCheck } from '@/libs/data-processing'
-
 export default {
     name: 'media-detail',
     props: {

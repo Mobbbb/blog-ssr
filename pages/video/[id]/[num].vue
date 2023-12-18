@@ -99,8 +99,7 @@
 
 <script setup lang='ts'>
 import { useRoute } from 'vue-router'
-import { transTime } from '@/libs/utils'
-import { axiosFetchHomeItemById } from '@/libs/api/home.js'
+import { axiosFetchHomeItemById } from '@/utils/api/home.js'
 
 const route = useRoute()
 

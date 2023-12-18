@@ -42,7 +42,7 @@
 <script setup lang='ts'>
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchHomeItemById } from '@/libs/api/home.js'
+import { fetchHomeItemById } from '@/utils/api/home.js'
 
 const store = useStore()
 const route = useRoute()
