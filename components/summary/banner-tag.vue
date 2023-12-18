@@ -20,14 +20,15 @@ export default {
     name: 'summary-banner-tag',
     props: ['params'],
     computed: {
-        channel() {
-            return this.params.channel === 0 ? '原创' : '转载'
-        },
-    },
-    computed: {
         ...mapState('app', [
             'currentRoute',
         ]),
+        channel() {
+            if (typeof this.params.channel !== 'undefined') {
+                return this.params.channel === 0 ? '原创' : '转载'
+            }
+            return ''
+        },
     },
     methods: {
         backAction() {

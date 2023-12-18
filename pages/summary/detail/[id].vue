@@ -41,7 +41,17 @@ const formatData = computed(() => {
 })
 
 const { response, pending } = await fetchSummaryItemById(route.params.id)
-useLazyFetchHandle(response, detailData)
+if (response.value) {
+    // 服务端渲染的数据处理
+    detailData.value = response.value.data
+}
+watch(response, (newRes) => {
+    // 监听路由跳转请求的数据处理
+    detailData.value = newRes.data
+    nextTick(() => {
+        Prism.highlightAll()
+    })
+})
 
 useHead({ titleTemplate: (productCategory) => `${detailData.value.title} - ${route.query.season || shortName}` })
 

@@ -36,12 +36,14 @@ export const axiosFetchHomeItemByName = ({ name, season }) => {
 }
 
 export const fetchHomeItemByName = async ({ name, season }) => {
+    console.log(`home:${name}:${season}`)
     const { data: response, pending } = await useLazyFetch('/api/blog/home/getAnimationByName', {
         query: {
             name,
             season,
         },
         method: 'get',
+        key: `home:${name}:${season}`,
     })
     return {
         response,

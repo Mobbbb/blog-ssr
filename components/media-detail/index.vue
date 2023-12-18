@@ -115,7 +115,7 @@ export default {
         },
         scoreLabel() {
             let sequelIndex = -1
-            const scoreLabel = [...this.params.scoreLabel]
+            const { scoreLabel = [] } = this.params
             scoreLabel.forEach((item, index) => {
                 if (specialScoreLabel.noEnding.includes(item)) {
                     if (sequelCheck({ data: this.animationList, currentData: this.params })) { // 有续集

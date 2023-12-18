@@ -1,5 +1,5 @@
 <template>
-    <div class="movie-detail" v-loading="pending">
+    <div class="movie-detail" v-loading="isLoading">
         <MediaDetail :params="mediaInfo" :animationList="animationList"></MediaDetail>
         <div class="detail-bottom-wrap">
             <div ref="episodeWrap">
@@ -50,7 +50,6 @@ useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${route.qu
 const episodeWrapWidth = ref(0)
 const episodeWidth = ref(88)
 const episodeWrap = ref(null)
-const mediaInfo = ref({})
 
 const animationList = computed(() => store.state.home.animationList)
 
@@ -98,11 +97,18 @@ const endProgress = computed(() => {
     return endProgressConfig
 })
 
-const { response, pending } = await fetchHomeItemByName({
+const mediaInfo = ref({
+    type: animationConfig.value,
+})
+const requestParams = {
     name: route.params.name,
     season: route.query.season,
-})
-useLazyFetchHandle(response, mediaInfo, animationConfig.value)
+}
+const isLoading = useLazyFetchHandle(
+    await fetchHomeItemByName(requestParams),
+    mediaInfo,
+    `home:${route.params.name}:${route.params.season}`,
+)
 
 onMounted(() => {
     episodeWrapWidth.value = episodeWrap.value.clientWidth

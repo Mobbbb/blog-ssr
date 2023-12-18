@@ -18,6 +18,7 @@ export const fetchMovieItemByName = async (name) => {
             name,
         },
         method: 'get',
+        key: `movie:${name}`,
     })
     return {
         response,

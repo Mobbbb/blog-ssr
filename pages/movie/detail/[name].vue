@@ -1,5 +1,5 @@
 <template>
-    <div class="movie-detail" v-loading="pending">
+    <div class="movie-detail" v-loading="isLoading">
         <MediaDetail :params="movieInfo"></MediaDetail>
         <div class="detail-bottom-wrap">
             <h4 class="comment-label">剧集</h4>
@@ -24,9 +24,14 @@ const route = useRoute()
 
 useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${route.query.season || shortName}` })
 
-const movieInfo = ref({})
-const { response, pending } = await fetchMovieItemByName(route.params.name)
-useLazyFetchHandle(response, movieInfo, movieConfig.value)
+const movieInfo = ref({
+    type: movieConfig.value,
+})
+const isLoading = useLazyFetchHandle(
+    await fetchMovieItemByName(route.params.name),
+    movieInfo,
+    `movie:${route.params.name}`,
+)
 
 const episodeClickHandle = () => {
     ElMessage({

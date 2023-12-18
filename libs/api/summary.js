@@ -18,6 +18,7 @@ export const fetchSummaryItemById = async (id) => {
             id,
         },
         method: 'get',
+        key: `summary:${id}`,
     })
     return {
         response,
