@@ -53,7 +53,7 @@ watch(response, (newRes) => {
     })
 })
 
-useHead({ titleTemplate: (productCategory) => `${detailData.value.title} - ${route.query.season || shortName}` })
+useHead({ titleTemplate: (productCategory) => `${detailData.value.title} - ${shortName}` })
 
 onMounted(async () => {
     Prism.highlightAll()

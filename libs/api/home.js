@@ -24,26 +24,19 @@ export const axiosFetchScoreMap = () => {
     })
 }
 
-export const axiosFetchHomeItemByName = ({ name, season }) => {
+export const axiosFetchHomeItemById = ({ id }) => {
     return axios.request({
-        url: '/api/blog/home/getAnimationByName',
+        url: '/api/blog/home/getAnimationById',
         method: 'get',
-        params: {
-            name,
-            season,
-        },
+        params: { id },
     })
 }
 
-export const fetchHomeItemByName = async ({ name, season }) => {
-    console.log(`home:${name}:${season}`)
-    const { data: response, pending } = await useLazyFetch('/api/blog/home/getAnimationByName', {
-        query: {
-            name,
-            season,
-        },
+export const fetchHomeItemById = async ({ id }) => {
+    const { data: response, pending } = await useLazyFetch('/api/blog/home/getAnimationById', {
+        query: { id },
         method: 'get',
-        key: `home:${name}:${season}`,
+        key: `home:${id}`,
     })
     return {
         response,

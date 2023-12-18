@@ -48,8 +48,8 @@ export const movieDetailRoute = {
 }
 
 export const homeDetailRoute = {
-    path: "/home/detail/:name",
-    name: "home-detail-name",
+    path: "/home/detail/:id",
+    name: "home-detail-id",
     meta: {
         level: 1,
         name: '动漫详情',
@@ -58,7 +58,7 @@ export const homeDetailRoute = {
 }
 
 export const videoPlayRoute = {
-    path: "/video/:name/:index",
+    path: "/video/:id/:index",
     name: "videoPlay",
     meta: {
         level: 2,
@@ -98,7 +98,6 @@ export default routeConfig
 export const useLazyFetchHandle = (data: any, mediaInfo: any, key: string) => {
     const { response, pending } = data
     const { data: prevData } = useNuxtData(key)
-    console.log(prevData.value, key)
     if (response.value) {
         // 服务端渲染的数据处理
         mediaInfo.value = Object.assign(mediaInfo.value, response.value.data || {})

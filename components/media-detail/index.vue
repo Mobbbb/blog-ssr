@@ -106,6 +106,7 @@ export default {
         return {
             rateScoreConfig,
             mediaTypeConfig,
+            maxWidth544: true,
         }
     },
     computed: {
@@ -164,10 +165,6 @@ export default {
         isFullCredit() {
             return !this.params.waitToScore && !this.scoreLabel.length
         },
-        maxWidth544() {
-            // const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-            return 1//width > 544
-        },
         scoreTime() {
             const month = this.params.month < 10 ? `0${this.params.month}` : this.params.month
             return this.params.scoreTime || (month ? `${this.params.years}-${month}` : this.params.years)
@@ -181,8 +178,9 @@ export default {
             return {}
         },
     },
-    methods: {
-
+    mounted() {
+        const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+        this.maxWidth544 = width > 544
     },
 }
 </script>

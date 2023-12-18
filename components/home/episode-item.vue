@@ -3,16 +3,12 @@
         :style="episodeItemStyle"
         @click="episodeClickHandle"
         :target="canPlay ? '_blank' : ''"
-        :href="canPlay ? `/video/${route.params.name}/${index}?season=${route.query.season}` : 'javascript:void(0);'">
+        :href="canPlay ? `/video/${mediaInfo.id}/${index}?name=${mediaInfo.name}&season=${mediaInfo.season}` : 'javascript:void(0);'">
         第{{index}}话
     </a>
 </template>
 
 <script setup lang='ts'>
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-
 const props = defineProps({
     mediaInfo: {
         default: () => {
@@ -65,6 +61,7 @@ const episodeClickHandle = () => {
     box-sizing: border-box;
     display: block;
     transition: all ease .3s;
+    margin-top: 10px;
 }
 .episode-item:visited {
     background: #ff9999;

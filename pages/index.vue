@@ -8,7 +8,7 @@
                             :searchFlag="searchFlag"
                             :listData="animationList" 
                             v-for="item in showAnimationList"
-                            @click="clickHandle(item.name, item.season)">
+                            @click="clickHandle(item.id, item.name)">
                 </CardItem>
             </template>
             <el-empty :description="isLoading ? ' ' : '暂无数据'" v-else></el-empty>
@@ -34,11 +34,11 @@ onMounted(async () => {
     initHomeHeader()
 })
 
-function clickHandle(name, season) {
+function clickHandle(id, name) {
     navigateTo({
-        path: `/home/detail/${name}`, 
+        path: `/home/detail/${id}`, 
         query: {
-            season,
+            name,
         },
     })
 }

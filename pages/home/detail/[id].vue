@@ -6,7 +6,9 @@
                 <template v-if="endProgress.length">
                     <h4 class="comment-label">剧集</h4>
                     <div class="episode-wrap">
-                        <div class="episode-line-wrap" v-for="(line, indexLine) in endProgress" :key="indexLine">
+                        <div class="episode-line-wrap"
+                            :style="{ justifyContent: episodeWrapWidth ? 'space-evenly' : 'space-around', }"
+                            v-for="(line, indexLine) in endProgress" :key="indexLine">
                             <div v-for="(item, index) in line" :key="index">
                                 <div :style="{ width: `${episodeWidth}px`, }" v-if="item.empty"></div>
                                 <HomeEpisodeItem :index="item.index"
@@ -40,12 +42,12 @@
 <script setup lang='ts'>
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchHomeItemByName } from '@/libs/api/home.js'
+import { fetchHomeItemById } from '@/libs/api/home.js'
 
 const store = useStore()
 const route = useRoute()
 
-useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${route.query.season || shortName}` })
+useHead({ titleTemplate: (productCategory) => `${route.query.name} - ${shortName}` })
 
 const episodeWrapWidth = ref(0)
 const episodeWidth = ref(88)
@@ -65,14 +67,16 @@ const movieVersions = computed(() => {
     return movieVersions
 })
 
+const mediaInfo = ref({
+    type: animationConfig.value,
+})
 const endProgress = computed(() => {
     const gap = 12
     const endProgressConfig = []
     let { endProgress = '', episodes = '' } = mediaInfo.value
     endProgress = parseInt(episodes) || parseInt(endProgress) || 0
-    
-    // todo
-    const numOfEachLine = parseInt(episodeWrapWidth.value / (episodeWidth.value + gap)) || 1 // 每行个数
+
+    const numOfEachLine = parseInt(episodeWrapWidth.value / (episodeWidth.value + gap)) || endProgress // 每行个数
     const totalLineNum = Math.ceil(endProgress / numOfEachLine) // 行数
     const restNum = numOfEachLine * totalLineNum - endProgress // 最后一行剩余个数
     if (totalLineNum && numOfEachLine) {
@@ -97,17 +101,13 @@ const endProgress = computed(() => {
     return endProgressConfig
 })
 
-const mediaInfo = ref({
-    type: animationConfig.value,
-})
 const requestParams = {
-    name: route.params.name,
-    season: route.query.season,
+    id: route.params.id,
 }
 const isLoading = useLazyFetchHandle(
-    await fetchHomeItemByName(requestParams),
+    await fetchHomeItemById(requestParams),
     mediaInfo,
-    `home:${route.params.name}:${route.params.season}`,
+    `home:${route.params.id}`,
 )
 
 onMounted(() => {
@@ -156,9 +156,11 @@ onMounted(() => {
     padding-bottom: 10px;
 }
 .episode-line-wrap {
-    padding-top: 10px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
 }
+</style>
+
+<style scoped>
+@import '@/components/media-detail/media.css';
 </style>

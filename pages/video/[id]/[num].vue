@@ -2,7 +2,7 @@
     <div class="video-page">
         <div class="video-top-wrap">
             <div class="blurbg-wrap"><div class="blurbg-image" :style="style"></div></div>
-            <div class="video-title">第{{route.params.num}}话 {{route.params.name + ' ' +  route.query.season}}</div>
+            <div class="video-title">第{{route.params.num}}话 {{route.query.name + ' ' +  route.query.season}}</div>
             <div class="video-wrap" @mouseover="hoverVideo = true" @mouseleave="hoverVideo = false">
                 <video class="video-player"
                     ref="videoPlayer"
@@ -100,13 +100,13 @@
 <script setup lang='ts'>
 import { useRoute } from 'vue-router'
 import { transTime } from '@/libs/utils'
-import { axiosFetchHomeItemByName } from '@/libs/api/home.js'
+import { axiosFetchHomeItemById } from '@/libs/api/home.js'
 
 const route = useRoute()
 
 useHead({
     titleTemplate: (productCategory) => {
-        return `${route.params.name} ${route.query.season} 第${route.params.num}话 - ${shortName}`
+        return `${route.query.name} ${route.query.season} 第${route.params.num}话 - ${shortName}`
     }
 })
 
@@ -162,9 +162,8 @@ const style = computed(() => {
 
 onMounted(async () => {
     playBarWidth.value = playerBarWrap.value.clientWidth
-    let res = await axiosFetchHomeItemByName({
-        name: route.params.name,
-        season: route.query.season,
+    let res = await axiosFetchHomeItemById({
+        id: route.params.id,
     })
     mediaInfo.value = res.data.data
 })

@@ -22,7 +22,7 @@ import { fetchMovieItemByName } from '@/libs/api/movie.js'
 const store = useStore()
 const route = useRoute()
 
-useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${route.query.season || shortName}` })
+useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${shortName}` })
 
 const movieInfo = ref({
     type: movieConfig.value,
