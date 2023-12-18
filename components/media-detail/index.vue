@@ -188,3 +188,10 @@ export default {
 <style scoped>
 @import './media.css';
 </style>
+
+<style>
+.media-rate .el-rate__item .el-rate__icon {
+    margin-right: 0;
+    font-size: 14px;
+}
+</style>

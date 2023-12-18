@@ -88,13 +88,6 @@
         height: 30px;
         line-height: 30px;
     }
-    .media-rate {
-        height: 16px;
-    }
-    .media-rate .el-rate__icon{
-        margin-right: 0;
-        font-size: 14px;
-    }
     .media-info-score-label {
         transform: scale(0.8);
         transform-origin: 0 0;

@@ -26,6 +26,7 @@ useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${shortNam
 
 const movieInfo = ref({
     type: movieConfig.value,
+    cover: '/resource/home-assets/images/loading.gif',
 })
 const isLoading = useLazyFetchHandle(
     await fetchMovieItemByName(route.params.name),
@@ -84,4 +85,8 @@ const episodeClickHandle = () => {
 .episode-item:hover {
     border-color: #00a1d6;
 }
+</style>
+
+<style scoped>
+@import '@/components/media-detail/media.css';
 </style>

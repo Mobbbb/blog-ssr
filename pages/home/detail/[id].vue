@@ -69,6 +69,7 @@ const movieVersions = computed(() => {
 
 const mediaInfo = ref({
     type: animationConfig.value,
+    cover: '/resource/home-assets/images/loading.gif',
 })
 const endProgress = computed(() => {
     const gap = 12
