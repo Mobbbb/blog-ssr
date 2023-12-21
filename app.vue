@@ -43,7 +43,7 @@ if (currentRoute.value.name === homeRoute.name) {
 	setSummaryData(await fetchSummaryListData())
 }
 
-onMounted(() => import('@/utils/weixinJSBridge'))
+onMounted(() => import('@/utils/extends/weixinJSBridge'))
 </script>
 
 <style scoped>

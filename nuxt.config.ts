@@ -1,5 +1,5 @@
 import prismjs from 'vite-plugin-prismjs'
-import { shortName, pageTitle } from './composables/constant'
+import { shortName, pageTitle } from './utils/constant'
 
 const BabelConfigLanguages = ['javascript', 'css', 'markup', 'nginx', 'bash']
 const APP_HOST = '//mobbbb.top'
