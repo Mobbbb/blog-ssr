@@ -8,7 +8,6 @@
 
 <script setup lang='ts'>
 import Prism from 'prismjs'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fetchSummaryItemById } from '@/utils/api/summary.js'
 
@@ -52,7 +51,11 @@ watch(response, (newRes) => {
     })
 })
 
-useHead({ titleTemplate: (productCategory) => `${detailData.value.title} - ${shortName}` })
+useHead({ titleTemplate: (productCategory) => {
+    if (detailData.value.title) {
+        return `${detailData.value.title} - ${shortName}`
+    }
+}})
 
 onMounted(async () => {
     Prism.highlightAll()

@@ -21,13 +21,13 @@ export default defineNuxtConfig({
 			viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no',
 			meta: [
 				{
-					name: 'keywords',
-					content: '动漫新番,动漫评价,电影评价,动漫推荐,新番推荐,动漫,新番,动画,日本动漫,番剧,番组,二次元,ANIME',
-			  	},
-			  	{
 					name: 'description',
-					content: 'Mobbbb,动漫新番,动漫推荐,新番推荐,电影评价,动漫评价',
-				},
+					content: 'Mobbbb,动漫新番,动漫推荐,新番推荐,电影评价,动漫评价,技术文章,原创博客',
+			  	},
+				{
+					name: 'keywords',
+					content: '动漫新番,动漫评价,电影评价,动漫推荐,新番推荐,动漫,新番,动画,日本动漫,番剧,番组,二次元,ANIME,技术文章,原创博客',
+			  	},
 				{
 					name: 'apple-mobile-web-app-title',
 					content: shortName,

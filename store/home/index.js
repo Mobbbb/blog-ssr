@@ -197,6 +197,7 @@ const home = {
          * @param {*} text 输入框内容
          */
         filterDataByConfig({ state, getters, commit, dispatch, rootState }, text) {
+            // todo 搜索问题
             let filterData = [], rawMaterial = []
             const { navSearchMutualExclusion } = rootState.app.currentRoute.meta || {}
             if (navSearchMutualExclusion) {

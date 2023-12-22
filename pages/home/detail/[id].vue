@@ -47,8 +47,6 @@ import { fetchHomeItemById } from '@/utils/api/home.js'
 const store = useStore()
 const route = useRoute()
 
-useHead({ titleTemplate: (productCategory) => `${route.query.name} - ${shortName}` })
-
 const episodeWrapWidth = ref(0)
 const episodeWidth = ref(88)
 const episodeWrap = ref(null)

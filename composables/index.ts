@@ -19,6 +19,13 @@ export const useLazyFetchHandle = (data: any, mediaInfo: any, key: string) => {
         mediaInfo.value = Object.assign(mediaInfo.value, newRes.data || {})
         mediaInfo.value.hoverShowLabel = mediaInfo.value.label
     })
+    useHead({
+        titleTemplate: () => {
+            if (mediaInfo.value) {
+                return `${mediaInfo.value.name} - ${shortName}`
+            }
+        }
+    })
 
     return isLoading
 }
