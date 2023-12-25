@@ -51,11 +51,7 @@ watch(response, (newRes) => {
     })
 })
 
-useHead({ titleTemplate: (productCategory) => {
-    if (detailData.value.title) {
-        return `${detailData.value.title} - ${shortName}`
-    }
-}})
+useLazyHead(detailData.value.title, route.query.title)
 
 onMounted(async () => {
     Prism.highlightAll()

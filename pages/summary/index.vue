@@ -4,7 +4,8 @@
             <template v-if="showArticleList.length">
                 <SummaryArticleItem :params="item"
                                     :key="item._index"
-                                    v-for="item in showArticleList">
+                                    v-for="item in showArticleList"
+                                    @click="clickHandle(item.id, item.title)">
                 </SummaryArticleItem>
             </template>
             <el-empty :description="isLoading ? ' ' : '暂无数据'" v-else></el-empty>
@@ -37,6 +38,14 @@ export default {
         ...mapActions('summary', [
             'getSummaryHandle',
         ]),
+        clickHandle(id, title) {
+            this.$router.push({
+                path: `/summary/detail/${id}`,
+                query: {
+                    title,
+                },
+            })
+        },
     },
 }
 </script>

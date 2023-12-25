@@ -1,5 +1,5 @@
 <template>
-    <div class="article-item-wrap mobile-wrap" @click="jumpToDetail">
+    <div class="article-item-wrap mobile-wrap">
         <div class="article-title" ref="titleWrap">
             <span :style="titleStyle" ref="titleText">{{params.title}}</span>
             <div class="article-type-wrap">
@@ -92,11 +92,6 @@ export default {
                 }
                 restWidth -= labelMarginRight
             }
-        },
-        jumpToDetail() {
-            this.$router.push({
-                path: `/summary/detail/${this.params.id}`,
-            })
         },
     },
     beforeUpdate() {

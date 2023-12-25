@@ -12,7 +12,7 @@
                                 :searchFlag="searchFlag"
                                 :listData="movieList" 
                                 v-for="item in formatMovieListByPage"
-                                @click="clickHandle(item.name)">
+                                @click="clickHandle(item.id, item.name)">
                 </CardItem>
             </template>
             <el-empty :description="isLoading ? ' ' : '暂无数据'" v-else></el-empty>
@@ -61,9 +61,12 @@ export default {
         ...mapActions('movie', [
             'getMovieListHandle',
         ]),
-        clickHandle(name) {
+        clickHandle(id, name) {
             this.$router.push({
-                path: `/movie/detail/${name}`,
+                path: `/movie/detail/${id}`,
+                query: {
+                    name,
+                },
             })
         },
         loadMovieListImmediately() {

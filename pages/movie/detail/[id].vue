@@ -5,7 +5,7 @@
             <h4 class="comment-label">剧集</h4>
             <div class="block-content">
                 <div class="episode-item" @click="episodeClickHandle">
-                    {{route.params.name}}
+                    {{movieInfo.name}}
                 </div>
             </div>
             <h4 class="comment-label">评论</h4>
@@ -17,22 +17,22 @@
 <script setup lang='ts'>
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchMovieItemByName } from '@/utils/api/movie.js'
+import { fetchMovieItemById } from '@/utils/api/movie.js'
 
 const store = useStore()
 const route = useRoute()
-
-useHead({ titleTemplate: (productCategory) => `${route.params.name} - ${shortName}` })
 
 const movieInfo = ref({
     type: movieConfig.value,
     cover: '/resource/home-assets/images/loading.gif',
 })
 const isLoading = useLazyFetchHandle(
-    await fetchMovieItemByName(route.params.name),
+    await fetchMovieItemById(route.params.id),
     movieInfo,
-    `movie:${route.params.name}`,
+    `movie:${route.params.id}`,
 )
+
+useLazyHead(movieInfo.value.name, route.query.name)
 
 const episodeClickHandle = () => {
     ElMessage({

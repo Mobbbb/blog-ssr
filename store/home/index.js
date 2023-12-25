@@ -150,7 +150,7 @@ const home = {
             commit('updateYears', maxYear)
             commit('updateActiveMonth', maxMonth)
         },
-        initHomeHeader({ state, commit }) {
+        initHomeHeader({ state, commit, dispatch }) {
             const localYears = localStorage.getItem('pick-years')
             const localMonth = localStorage.getItem('pick-month')
             if (!state.availableDate.months[`${localYears}-${localMonth}`]) {

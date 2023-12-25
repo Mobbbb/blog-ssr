@@ -35,7 +35,7 @@ onMounted(async () => {
 
 function clickHandle(id, name) {
     navigateTo({
-        path: `/home/detail/${id}`, 
+        path: `/home/detail/${id}`,
         query: {
             name,
         },

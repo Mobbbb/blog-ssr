@@ -109,6 +109,8 @@ const isLoading = useLazyFetchHandle(
     `home:${route.params.id}`,
 )
 
+useLazyHead(mediaInfo.value.name, route.query.name)
+
 onMounted(() => {
     episodeWrapWidth.value = episodeWrap.value.clientWidth
 })
