@@ -22,7 +22,7 @@ export default defineNuxtConfig({
 			meta: [
 				{
 					name: 'description',
-					content: 'Mobbbb,动漫新番,动漫推荐,新番推荐,电影评价,动漫评价,技术文章,原创博客',
+					content: `${shortName},M站,动漫新番,动漫推荐,新番推荐,电影评价,动漫评价,技术文章,原创博客`,
 			  	},
 				{
 					name: 'keywords',

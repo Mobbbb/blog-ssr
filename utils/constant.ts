@@ -133,5 +133,5 @@ export const prismMap = {
 
 export const textTypeMap = [summaryTypeMap.TEXT, summaryTypeMap.CODE]
 
-export const shortName = 'AMS'
-export const pageTitle = 'AMS - Animation.Movie.Summary'
+export const shortName = 'AMS动漫'
+export const pageTitle = 'AMS动漫博客 - M站'
