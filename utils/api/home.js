@@ -24,6 +24,13 @@ export const axiosFetchScoreMap = () => {
     })
 }
 
+export const insertLog = () => {
+    return axios.request({
+        url: '/api/blog/insertLog',
+        method: 'post',
+    })
+}
+
 export const axiosFetchHomeItemById = ({ id }) => {
     return axios.request({
         url: '/api/blog/home/getAnimationById',

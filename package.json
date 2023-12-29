@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "blog-ssr",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,6 @@
     "axios": "^0.21.1",
     "element-plus": "^2.2.27",
     "gsap": "^3.8.0",
-    "pinia": "^2.0.14",
     "prismjs": "^1.25.0",
     "vue": "3.2.45",
     "umob": "^0.2.5"
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.6",
     "@nuxt/devtools": "latest",
-    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.8.0",
     "vite-plugin-prismjs": "^0.0.8",
     "vue": "^3.3.6",

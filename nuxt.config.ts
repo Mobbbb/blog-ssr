@@ -1,5 +1,5 @@
 import prismjs from 'vite-plugin-prismjs'
-import { shortName, pageTitle } from './utils/constant'
+import { abbName, pageTitle } from './utils/constant'
 
 const BabelConfigLanguages = ['javascript', 'css', 'markup', 'nginx', 'bash']
 const APP_HOST = '//mobbbb.top'
@@ -16,13 +16,13 @@ export default defineNuxtConfig({
 	app: {
 		rootId: 'app',
 		head: {
-			title: pageTitle,
+			title: `${pageTitle} - ${abbName}`,
 			charset: 'utf-8',
 			viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no',
 			meta: [
 				{
 					name: 'description',
-					content: `${shortName},M站,动漫新番,动漫推荐,新番推荐,电影评价,动漫评价,技术文章,原创博客`,
+					content: `${pageTitle},${abbName},动漫新番,动漫推荐,新番推荐,电影评价,动漫评价,技术文章,原创博客`,
 			  	},
 				{
 					name: 'keywords',
@@ -30,7 +30,7 @@ export default defineNuxtConfig({
 			  	},
 				{
 					name: 'apple-mobile-web-app-title',
-					content: shortName,
+					content: abbName,
 				},
 				{
 					name: 'theme-color',
@@ -52,7 +52,6 @@ export default defineNuxtConfig({
 	css: ['~/assets/css/index.css', '~/assets/css/media.css'],
 	modules: [
 		'@element-plus/nuxt',
-		'@pinia/nuxt',
 	],
 	runtimeConfig: {
 		public: {

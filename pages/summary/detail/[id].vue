@@ -53,7 +53,7 @@ watch(response, (newRes) => {
 
 useLazyHead(detailData.value.title, route.query.title)
 
-onMounted(async () => {
+onMounted(() => {
     Prism.highlightAll()
 })
 </script>

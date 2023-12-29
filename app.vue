@@ -11,7 +11,7 @@
 
 <script setup lang='ts'>
 import { useStore } from 'vuex'
-import { fetchScoreMap, fetchHomeListData } from '@/utils/api/home'
+import { fetchScoreMap, fetchHomeListData, insertLog } from '@/utils/api/home'
 import { fetchMovieListData } from '@/utils/api/movie'
 import { fetchSummaryListData } from '@/utils/api/summary'
 import '@/utils/extends'
@@ -43,7 +43,12 @@ if (currentRoute.value.name === homeRoute.name) {
 	setSummaryData(await fetchSummaryListData())
 }
 
-onMounted(() => import('@/utils/extends/weixinJSBridge'))
+onMounted(() => {
+	import('@/utils/extends/weixinJSBridge')
+	if (process.env.NODE_ENV === 'production') {
+		insertLog()
+	}
+})
 </script>
 
 <style scoped>

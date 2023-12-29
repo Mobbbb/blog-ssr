@@ -1,6 +1,6 @@
 <template>
     <div class="footer-tools-wrap">
-        <el-popover trigger="click" placement="left-end" :width="110" popper-class="footer-filter-popover-wrap">
+        <el-popover trigger="click" placement="left-end" :width="125" popper-class="footer-filter-popover-wrap">
             <el-checkbox-group v-model="selectedFilter">
                 <div v-for="item in innerPageFilterConfig" :key="item" class="filter-item">
                     <el-checkbox :label="item.value">
